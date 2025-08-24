@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class EmployeeDAOImpl implements EmployeeDAO {
@@ -27,8 +28,8 @@ public class EmployeeDAOImpl implements EmployeeDAO {
     }
 
     @Override
-    public Employee getEmployeeById(Long id) {
-        return entityManager.find(Employee.class, id);
+    public Optional<Employee> getEmployeeById(Long id) {
+        return Optional.ofNullable(entityManager.find(Employee.class, id));
     }
 
     @Override
@@ -37,8 +38,13 @@ public class EmployeeDAOImpl implements EmployeeDAO {
     }
 
     @Override
-    public void deleteEmployee(Long id) {
+    public boolean deleteEmployee(Long id) {
         Employee employeeToRemove = entityManager.find(Employee.class, id);
-        entityManager.remove(employeeToRemove);
+        if (employeeToRemove != null) {
+            entityManager.remove(employeeToRemove);
+            return true;
+        } else {
+            return false;
+        }
     }
 }

@@ -2,6 +2,7 @@ package com.example.employees.service.Impl;
 
 import com.example.employees.dao.EmployeeDAO;
 import com.example.employees.entities.Employee;
+import com.example.employees.exception.EmployeeNotFoundException;
 import com.example.employees.request.EmployeeRequest;
 import com.example.employees.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,8 +36,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public Employee getEmployeeById(Long id) {
-
-        return employeeDAO.getEmployeeById(id);
+        return employeeDAO.getEmployeeById(id).orElseThrow(() -> new EmployeeNotFoundException("Employee Not Found"));
     }
 
     @Transactional
@@ -58,6 +58,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Override
     public void deleteEmployee(Long id) {
-        employeeDAO.deleteEmployee(id);
+        if (!employeeDAO.deleteEmployee(id)) {
+            throw new EmployeeNotFoundException("Employee Not Found");
+        }
     }
 }

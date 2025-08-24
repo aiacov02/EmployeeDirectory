@@ -5,6 +5,7 @@ import com.example.employees.request.EmployeeRequest;
 import com.example.employees.service.EmployeeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("v1/employees")
+@Tag(name="Employee API Rest Endpoints", description = "Operations related to employees")
 public class EmployeeController {
 
     private final EmployeeService employeeService;
@@ -31,7 +33,7 @@ public class EmployeeController {
 
     @Operation(summary = "Get employee by id")
     @GetMapping("/{id}")
-    public Employee getEmployeeById(Long id) {
+    public Employee getEmployeeById(@Min(value=1) Long id) {
         return employeeService.getEmployeeById(id);
     }
 
