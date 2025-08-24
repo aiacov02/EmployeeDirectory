@@ -44,7 +44,7 @@ http://localhost:8080/h2-console
 Default credentials:
 - JDBC URL: `jdbc:h2:file:./data/employees`
 - Username: `sa`
-- Password: (leave blank)
+- Password:
 
 ### Test
 
