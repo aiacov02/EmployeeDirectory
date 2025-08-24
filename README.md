@@ -124,12 +124,3 @@ This project includes SpringDoc OpenAPI. After starting the application, the int
 ```
 http://localhost:8080/swagger-ui.html
 ```
-
-From there you can view and test all endpoints directly in the browser.
-
----
-
-## Notes
-
-- The application uses an H2 database that persists to the local file system (`./data/employees`). Restarting the application will keep existing records unless the data directory is cleared.  
-- The service layer throws `EmployeeNotFoundException` when an employee cannot be found. This is automatically translated into a `404 Not Found` response.
