@@ -51,6 +51,9 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Transactional
     @Override
     public Employee updateEmployee(long id, EmployeeRequest employeeRequest) {
+        if (!repository.existsById(id)) {
+            throw new EmployeeNotFoundException("Employee not found");
+        }
         Employee employee = convertToEmployee(id, employeeRequest);
         return repository.save(employee);
     }

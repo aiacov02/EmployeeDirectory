@@ -77,14 +77,21 @@ Base URL: `/api/employees`
 ```
 GET /api/employees
 ```
-Returns a list of all employees.
+Responses:
+Responses:
+- `200 OK` with the list of employees
+- `404 Not Found` if the employee does not exist
+- `403 Forbidden` if the user does not have permission
+- `401 Unauthorized` if not authenticated
 
 ### Get employee by ID
 ```
 GET /api/employees/{id}
 ```
-Returns a single employee.  
-Response: `404 Not Found` if the employee does not exist.
+Responses:
+- `404 Not Found` if the employee does not exist
+- `403 Forbidden` if the user does not have permission
+- `401 Unauthorized` if not authenticated
 
 ### Create a new employee
 ```
@@ -98,7 +105,10 @@ Request body (JSON):
   "email": "johndoe@example.com"
 }
 ```
-Response: `201 Created`
+Responses:
+- `200 OK` with the updated employee if successful
+- `403 Forbidden` if the user does not have permission
+- `401 Unauthorized` if not authenticated
 
 ### Update an existing employee
 ```
@@ -112,7 +122,12 @@ Request body (JSON):
   "email": "janesmith@example.com"
 }
 ```
-Response: `200 OK` with the updated employee.
+
+Responses:
+- `200 OK` with the updated employee if successful
+- `404 Not Found` if the employee does not exist
+- `403 Forbidden` if the user does not have permission
+- `401 Unauthorized` if not authenticated
 
 ### Delete an employee
 ```
@@ -120,7 +135,9 @@ DELETE /api/employees/{id}
 ```
 Responses:  
 - `204 No Content` if deleted successfully  
-- `404 Not Found` if the employee does not exist  
+- `404 Not Found` if the employee does not exist
+- `403 Forbidden` if the user does not have permission
+- `401 Unauthorized` if not authenticated
 
 ---
 
@@ -138,7 +155,7 @@ From there you can view and test all endpoints directly in the browser.
 
 ## H2 Database Schema
 
-### USERS Table
+### MEMBERS Table
 ```sql
 CREATE TABLE MEMBERS (
    username VARCHAR(50) NOT NULL PRIMARY KEY,
@@ -153,14 +170,14 @@ CREATE TABLE ROLES (
     serno INT AUTO_INCREMENT PRIMARY KEY,
     user_id VARCHAR(50) NOT NULL,
     role VARCHAR(50) NOT NULL,
-    CONSTRAINT fk_roles_users FOREIGN KEY (user_id) REFERENCES system_users.member_id,
+    CONSTRAINT fk_roles_members FOREIGN KEY (user_id) REFERENCES members(username),
     CONSTRAINT uq_user_role UNIQUE (user_id, role)
 );
 ```
 
 ### Example Inserts
 ```sql
-INSERT INTO USERS (username, password, enabled) VALUES
+INSERT INTO MEMBERS (username, password, enabled) VALUES
 ('jane', '{bcrypt}<hash>', TRUE),
 ('marios', '{bcrypt}<hash>', TRUE),
 ('kostas', '{bcrypt}<hash>', TRUE);
