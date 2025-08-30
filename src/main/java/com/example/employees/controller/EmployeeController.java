@@ -6,15 +6,17 @@ import com.example.employees.service.EmployeeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.annotation.HttpConstraint;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("v1/employees")
+@RequestMapping("/v1/employees")
 @Tag(name="Employee API Rest Endpoints", description = "Operations related to employees")
 public class EmployeeController {
 
@@ -52,6 +54,7 @@ public class EmployeeController {
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete an employee by id")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteEmployee(@Parameter(description = "id of employee to delete") @PathVariable @Min(value=1) Long id) {
         employeeService.deleteEmployee(id);
     }

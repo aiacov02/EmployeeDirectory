@@ -1,11 +1,12 @@
 package com.example.employees.service.Impl;
 
-import com.example.employees.dao.EmployeeDAO;
+import com.example.employees.dao.EmployeeRepository;
 import com.example.employees.entities.Employee;
 import com.example.employees.exception.EmployeeNotFoundException;
 import com.example.employees.request.EmployeeRequest;
 import com.example.employees.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,7 +17,7 @@ import java.util.List;
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
 
-    private final EmployeeDAO employeeDAO;
+    private final EmployeeRepository repository;
 
     private Employee convertToEmployee(long id, EmployeeRequest employeeRequest) {
         Employee employee = new Employee(employeeRequest.getFirstName(), employeeRequest.getLastName(), employeeRequest.getEmail());
@@ -25,18 +26,18 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Autowired
-    public EmployeeServiceImpl(EmployeeDAO employeeDAO) {
-        this.employeeDAO = employeeDAO;
+    public EmployeeServiceImpl(EmployeeRepository repository) {
+        this.repository = repository;
     }
 
     @Override
     public List<Employee> getAllEmployees() {
-        return employeeDAO.getAllEmployees();
+        return repository.findAll();
     }
 
     @Override
     public Employee getEmployeeById(Long id) {
-        return employeeDAO.getEmployeeById(id).orElseThrow(() -> new EmployeeNotFoundException("Employee Not Found"));
+        return repository.findById(id).orElseThrow(() -> new EmployeeNotFoundException("Employee Not Found"));
     }
 
     @Transactional
@@ -44,22 +45,23 @@ public class EmployeeServiceImpl implements EmployeeService {
     public Employee saveEmployee(EmployeeRequest employeeRequest) {
 
         Employee employee = convertToEmployee(0, employeeRequest);
-        return employeeDAO.saveEmployee(0, employee);
+        return repository.save(employee);
     }
 
     @Transactional
     @Override
     public Employee updateEmployee(long id, EmployeeRequest employeeRequest) {
         Employee employee = convertToEmployee(id, employeeRequest);
-        return employeeDAO.saveEmployee(id, employee);
+        return repository.save(employee);
     }
 
     @Transactional
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Override
     public void deleteEmployee(Long id) {
-        if (!employeeDAO.deleteEmployee(id)) {
-            throw new EmployeeNotFoundException("Employee Not Found");
+        if (!repository.existsById(id)) {
+            throw new EmployeeNotFoundException("Employee not found");
         }
+        repository.deleteById(id);
     }
 }
