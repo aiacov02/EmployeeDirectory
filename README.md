@@ -80,7 +80,6 @@ GET /api/employees
 Responses:
 Responses:
 - `200 OK` with the list of employees
-- `404 Not Found` if the employee does not exist
 - `403 Forbidden` if the user does not have permission
 - `401 Unauthorized` if not authenticated
 
